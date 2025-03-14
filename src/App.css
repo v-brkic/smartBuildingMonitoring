@@ -1,0 +1,54 @@
+/*!
+ * Bootstrap v5.3.2 (https://getbootstrap.com)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+ body {
+  min-width: 800px;
+  margin: 0 auto;
+}
+
+.bg-custom{
+  background-color: black;
+}
+
+.nav-link .px-2 .link-body-emphasis{
+  color: white;
+}
+.text-body-secondary .bi-twitter {
+  color: black;
+}
+
+.text-body-secondary .bi-instagram {
+  color: black;
+}
+
+.text-body-secondary .bi-facebook {
+  color: black;
+}
+
+.profil{
+  text-decoration: none;
+  color: black;
+}
+
+.marginLeft-custom{
+  margin-left: 1%;
+  margin-right: 1%;
+}
+.customColorForJumbotron{
+  opacity: 0.9;
+}
+.customRound{
+  border-radius: 105px;
+  margin: 10px;
+}
+.customBgImage{
+  background-image: url('./panel.jpg');
+}
+.customSolar{
+  text-decoration: none;
+  color: black;
+}

@@ -1,0 +1,121 @@
+---
+title: "vjezba ZI"
+author: "36539333 Vinko Brkić"
+date: "2024-02-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(MASS)
+library(tidyverse)
+library(stringr)
+library(ggplot2)
+library(GGally)
+library(sn)
+library(gridExtra)
+library(broom)
+library(car)
+library(corrplot)
+library(lubridate)
+library(caret)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Funkcija za izvršavanje linearnih regresija, predikciju budućih vrijednosti i izračunavanje viška
+performLinearRegression <- function(df) {
+  # Podijelite podatke na trening (70%) i test (30%) setove koristeći razdjelitelj podataka
+  set.seed(123)  # Za reproduktivnost
+  trainIndex <- createDataPartition(df$proizvodnja, p = 0.7, list = FALSE)
+  trainData <- df[trainIndex, ]
+  testData <- df[-trainIndex, ]
+
+  # Izračunajte linearnu regresiju za svaku varijablu od interesa
+  model_spremnik <- lm(spremnik ~ potrosnja + proizvodnja, data = trainData)
+  model_potrosnja <- lm(potrosnja ~ proizvodnja + datum, data = trainData)
+  model_proizvodnja <- lm(proizvodnja ~ datum, data = trainData)
+
+  # Predvidite vrijednosti na testnom setu
+  testData$spremnik_pred <- predict(model_spremnik, newdata = testData)
+  testData$potrosnja_pred <- predict(model_potrosnja, newdata = testData)
+  testData$proizvodnja_pred <- predict(model_proizvodnja, newdata = testData)
+
+  # Izračunajte metrike performansi na testnom setu
+  rmse_spremnik <- calculateRMSE(testData$spremnik, testData$spremnik_pred)
+  mae_spremnik <- calculateMAE(testData$spremnik, testData$spremnik_pred)
+
+  rmse_potrosnja <- calculateRMSE(testData$potrosnja, testData$potrosnja_pred)
+  mae_potrosnja <- calculateMAE(testData$potrosnja, testData$potrosnja_pred)
+
+  rmse_proizvodnja <- calculateRMSE(testData$proizvodnja, testData$proizvodnja_pred)
+  mae_proizvodnja <- calculateMAE(testData$proizvodnja, testData$proizvodnja_pred)
+
+  overall_rmse <- calculateRMSE(c(testData$spremnik, testData$potrosnja, testData$proizvodnja),
+                                c(testData$spremnik_pred, testData$potrosnja_pred, testData$proizvodnja_pred))
+  overall_mae <- calculateMAE(c(testData$spremnik, testData$potrosnja, testData$proizvodnja),
+                              c(testData$spremnik_pred, testData$potrosnja_pred, testData$proizvodnja_pred))
+
+  # Ispišite rezultate
+  cat("RMSE za spremnik:", rmse_spremnik, "\n")
+  cat("MAE za spremnik:", mae_spremnik, "\n\n")
+
+  cat("RMSE za potrošnju:", rmse_potrosnja, "\n")
+  cat("MAE za potrošnju:", mae_potrosnja, "\n\n")
+
+  cat("RMSE za proizvodnju:", rmse_proizvodnja, "\n")
+  cat("MAE za proizvodnju:", mae_proizvodnja, "\n\n")
+  cat("Ukupni RMSE:", overall_rmse, "\n")
+  cat("Ukupni MAE:", overall_mae, "\n")
+
+  # Predvidite buduće vrijednosti na temelju modela obučenog na cijelom skupu podataka
+  future_dates <- seq(from = max(df$datum) + 1, by = "day", length.out = 5)  # Predviđanje sljedećih 5 dana
+  future_df <- data.frame(
+    proizvodnja = rep(mean(df$proizvodnja), length(future_dates)),  # Koristite srednju vrijednost kao zamjenu
+    potrosnja = rep(mean(df$potrosnja), length(future_dates)),  # Koristite srednju vrijednost kao zamjenu
+    datum = future_dates
+  )
+
+  # Predvidite za buduće datume koristeći obučene modele
+  future_df$spremnik_pred <- predict(model_spremnik, newdata = future_df)
+  future_df$potrosnja_pred <- predict(model_potrosnja, newdata = future_df)
+  future_df$proizvodnja_pred <- predict(model_proizvodnja, newdata = future_df)
+
+  # Izračunajte višak energije za svaki dan
+  future_df$surplus <- future_df$proizvodnja_pred - future_df$potrosnja_pred
+
+  # Izračunajte prosječni višak za sljedećih 5 dana i zaokružite na 2 decimale
+  average_surplus <- round(mean(future_df$surplus), 2)
+
+  # Zapišite prosječni višak u CSV datoteku bez imena stupaca
+  write.csv(average_surplus, file = "future_energy_surplus.csv", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+# Funkcija za izračunavanje RMSE
+calculateRMSE <- function(actual, predicted) {
+  rmse <- sqrt(mean((actual - predicted)^2))
+  return(rmse)
+}
+
+# Funkcija za izračunavanje MAE
+calculateMAE <- function(actual, predicted) {
+  mae <- mean(abs(actual - predicted))
+  return(mae)
+}
+
+# Glavna funkcija za ažuriranje podataka i izvođenje regresije
+updateDataAndRegression <- function() {
+  # Dohvatite podatke s API endpointa
+  df <- getChartData()
+
+  # Perform linear regression, predict future values, and calculate surplus
+  performLinearRegression(df)
+}
+
+# Call main function
+updateDataAndRegression()
+
+
+
+
+```
+

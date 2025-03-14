@@ -1,0 +1,64 @@
+.percentage-container{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 2%;
+  justify-content: center;
+}
+
+.statistic{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2%;
+}
+
+.graph-container {
+  margin: 10px; 
+}
+
+.graph-container h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.customColor1{
+  color: red;
+}
+.customColor2{
+  color: darkgreen;
+  opacity: 0.9;
+}
+.customColor3{
+  color: darkblue;
+}
+
+.vrijednosti{
+  font-size: 30px;
+  align-self: center;
+}
+
+.vrijednosti2{
+  font-size: 38px;
+}
+
+.datepicker-container {
+  position: relative;
+}
+
+.datepicker-calendar {
+  position: absolute;
+  left: 0;
+  top: 40px; /* Prilagodite ovu vrijednost prema potrebi */
+  z-index: 1000;
+}
+
+@media (max-width: 767px) {
+  .graph-container {
+    max-width: 100%; 
+  }
+  .p-5 .mb-4 .bg-body-tertiary .customRound{
+    border-radius: 0;
+    width: 100%;
+    color: black;
+  }
+}

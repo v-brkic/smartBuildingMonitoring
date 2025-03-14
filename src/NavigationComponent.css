@@ -1,0 +1,70 @@
+.navigation {
+    width: 15%;
+    height: 100%;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid black; /* Crta za razdvajanje s desne strane */
+  }
+  
+  .nav-header {
+    padding: 10px;
+    margin: 45px;
+    background-color: yellow; /* Boja zaglavlja */
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 15px;
+  }
+  
+  .nav-divider {
+    height: 2px;
+    background-color: black; /* Boja crte za razdvajanje */
+    margin: 25px;
+  }
+  
+  .nav-item {
+    padding: 10px;
+    cursor: pointer;
+    display: block;
+    justify-content: space-between;
+    transition: background-color 0.3s;
+    text-align: center;
+  }
+  
+  .nav-item:hover {
+    background-color: #ffffcc; /* Svjetložuta boja na hover */
+    border-radius: 15px;
+  }
+  
+  .sub-item {
+    padding: 5px 20px;
+    color: grey;
+  }
+  
+  .active {
+    background-color: #ffffcc; /* Svjetložuta boja za otvorene stavke */
+  }
+
+  @media only screen and (max-width: 768px) {
+    .navigation {
+      width: 100%;
+      height: auto;
+      position: static;
+      border-right: none;
+    }
+    
+    .nav-divider {
+      display: none;
+    }
+    
+    .nav-item {
+      text-align: left;
+    }
+    
+    .sub-item {
+      padding: 5px 10px;
+    }
+  }
