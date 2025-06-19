@@ -1,4 +1,4 @@
-# **Here is only code which was used for this project**
+# **Smart building monitoring**
 
 In this project, a web application for predictive monitoring of advanced buildings was developed, aiming to optimize the energy balance through the use of renewable energy sources.  
 
